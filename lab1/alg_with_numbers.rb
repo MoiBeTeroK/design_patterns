@@ -21,5 +21,21 @@ def sum_of_not_simple_num(number)
 end
 
 puts "Введите число:"
-number = gets.chomp.to_i
+number = gets.to_i
 puts "Сумма непросых делителей числа: #{sum_of_not_simple_num(number)}"
+
+#Метод 2. Найти количество цифр числа, меньших 3.
+def count_number_less_three(number)
+	count = 0
+	number = number.abs
+	while number > 0
+		digit = number % 10
+		count +=1 if digit < 3
+		number /= 10
+	end
+	count
+end
+
+puts "Введите число:"
+digit = gets.to_i
+puts "Количество цифр числа, меньших 3: #{count_number(digit)}"
