@@ -39,3 +39,50 @@ end
 puts "Введите число:"
 digit = gets.to_i
 puts "Количество цифр числа, меньших 3: #{count_number(digit)}"
+
+#Метод 3. Найти количество чисел, не являющихся делителями исходного числа, не взамнопростых с ним и взаимно простых с суммой простых цифр этого числа.
+def divisors_or_not(number, find_divisors = true)
+    return [] if number == 0
+    divs = []
+    for i in 1..number
+        if find_divisors
+            divs << i if number % i == 0
+        else
+            divs << i if number % i != 0
+        end
+    end
+    divs
+end
+
+def sum_of_simple_digits(number)
+	count = 0
+	number = number.abs
+	while number > 0
+		digit = number % 10
+		divs_num = divisors_or_not(digit)
+		count += digit if divs_num.length == 2
+		number /= 10
+	end
+	count
+end
+
+def coprime_numbers(num1, num2)
+	divs1 = divisors_or_not(num1)
+	divs2 = divisors_or_not(num2)
+	divs = divs1 & divs2
+	return divs == [1]
+end
+
+def answer(number)
+	not_div = divisors_or_not(number, false)
+	count = 0
+	sum_digits = sum_of_simple_digits(number)
+	for num in not_div
+		count += 1 if coprime_numbers(number, num) == false and coprime_numbers(num, sum_digits)
+	end
+	count
+end
+
+puts "Введите число:"
+number = gets.to_i
+puts "Количество чисел, удовлетворяющих условию: #{answer(number)}"
