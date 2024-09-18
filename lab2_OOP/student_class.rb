@@ -75,4 +75,8 @@ class Student
   def set_git=(git)
     @git = git
   end
+
+  def information()
+    puts "id: #{@id}", "surname: #{@surname}", "name: #{@name}", "patronymic: #{@patronymic}", "phone: #{@phone}", "telegram: #{@telegram}", "email: #{@email}", "git: #{@git}", "#{'-' * 40}"
+  end
 end
