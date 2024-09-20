@@ -10,8 +10,8 @@ class Student
     @git = git
   end
 
-  # Геттеры
-  def id
+   # Геттеры
+   def id
     @id
   end
 
