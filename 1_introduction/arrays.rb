@@ -25,14 +25,14 @@ end
 def read_array(file)
   array = []
   begin
-    f = File.open(file, 'r')
-    while (line = f.gets)
-      elements = line.split
-      for el in elements
-        array << el.to_i
+    File.open(file, 'r') do |f|
+      f.each_line do |line|
+        elements = line.split
+        elements.each do |el|
+          array << el.to_i
+        end
       end
     end
-    f.close
   rescue 
     puts "Такого адреса файла не существует"
     exit -1

@@ -73,7 +73,7 @@ def coprime_numbers(num1, num2)
 	return divs == [1]
 end
 
-def answer(number)
+def count_non_divs_not_coprime_with_number_and_coprime_with_digit_sum(number)
 	not_div = divisors_or_not(number, false)
 	count = 0
 	sum_digits = sum_of_simple_digits(number)
@@ -85,4 +85,4 @@ end
 
 puts "Введите число:"
 number = gets.to_i
-puts "Количество чисел, удовлетворяющих условию: #{answer(number)}"
+puts "Количество чисел, удовлетворяющих условию: #{count_non_divs_not_coprime_with_number_and_coprime_with_digit_sum(number)}"
