@@ -1,16 +1,15 @@
 class Student
 
-  attr_accessor :surname, :name, :patronymic, :id, :telegram, :email, :git, :phone
+  attr_accessor :surname, :name, :patronymic, :id, :git
+  attr_reader :phone, :telegram, :email
 
   def initialize(parameters)
     @surname = parameters[:surname]
     @name = parameters[:name]
     @patronymic = parameters[:patronymic]
     @id = parameters[:id]
-    self.phone = parameters[:phone]
-    self.telegram = parameters[:telegram]
-    self.email = parameters[:email]
     self.git = parameters[:git]
+    set_contacts(parameters)
 
     raise "Surname, name and patronymic cannot be empty" if @surname.nil? || @name.nil? || @patronymic.nil?
   end
@@ -31,6 +30,8 @@ class Student
     git.nil? || git.match?(/\A(https:\/\/)?github.com\/[a-zA-Z0-9_-]+\z/)
   end
 
+  private 
+
   def phone=(phone)
     raise "Incorrect phone number" if !Student.phone_number?(phone)
     @phone = phone
@@ -46,6 +47,8 @@ class Student
     @email=email
   end
 
+  public
+  
   def git=(git)
     raise "Incorrect git"if !Student.git_valid?(git)
     @git=git
@@ -67,6 +70,12 @@ class Student
     else
       puts "Ошибка: требуется наличие git и как минимум еще один контакт"
     end
+  end
+
+  def set_contacts(contacts)
+    self.phone = contacts[:phone] if contacts[:phone]
+    self.telegram = contacts[:telegram] if contacts[:telegram]
+    self.email = contacts[:email] if contacts[:email]
   end
 
   def to_s
