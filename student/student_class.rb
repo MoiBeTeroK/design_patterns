@@ -1,7 +1,6 @@
 class Student
 
-  attr_accessor :surname, :name, :patronymic, :id, :telegram, :email, :git
-  attr_reader :phone, :telegram, :email, :git
+  attr_accessor :surname, :name, :patronymic, :id, :telegram, :email, :git, :phone
 
   def initialize(parameters)
     @surname = parameters[:surname]
@@ -17,19 +16,19 @@ class Student
   end
 
   def self.phone_number?(phone)
-    phone.match(/\A(\+?7|8)\d{10}\z/)
+    phone.nil? || phone.match?(/\A(\+?7|8)\d{10}\z/)
   end
 
   def self.email_valid?(email)
-    email.match?(/\A[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+\z/)
+    email.nil? || email.match?(/\A[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+\z/)
   end
 
   def self.telegram_valid?(telegram)
-    telegram.match?(/\A@[a-zA-Z0-9_]{5,}\z/)
+    telegram.nil? || telegram.match?(/\A@[a-zA-Z0-9_]{5,}\z/)
   end
 
   def self.git_valid?(git)
-    git.match?(/\A(https:\/\/)?github.com\/[a-zA-Z0-9_-]+\z/)
+    git.nil? || git.match?(/\A(https:\/\/)?github.com\/[a-zA-Z0-9_-]+\z/)
   end
 
   def phone=(phone)
@@ -52,7 +51,26 @@ class Student
     @git=git
   end
 
-  def information()
-    puts "id: #{@id}", "surname: #{@surname}", "name: #{@name}", "patronymic: #{@patronymic}", "phone: #{@phone}", "telegram: #{@telegram}", "email: #{@email}", "git: #{@git}", "#{'-' * 40}"
+  def has_git?
+    !@git.nil? && Student.git_valid?(@git)
+  end
+
+  def has_contact?
+    (!@phone.nil? && Student.phone_number?(@phone)) ||
+    (!@telegram.nil? && Student.telegram_valid?(@telegram)) ||
+    (!@email.nil? && Student.email_valid?(@email))
+  end
+
+  def validate
+    if has_git? && has_contact?
+      puts"У студента есть git и другой контакт"
+    else
+      puts "Ошибка: требуется наличие git и как минимум еще один контакт"
+    end
+  end
+
+  def to_s
+    "ID: #{@id}\nФИО: #{@surname} #{@name} #{@patronymic}\nТелефон: #{@phone}\nTelegram: #{@telegram}\nEmail: #{@email}\nGit: #{@git}\n" \
+    "#{'-' * 40}"
   end
 end
