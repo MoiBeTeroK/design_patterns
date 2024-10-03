@@ -5,8 +5,12 @@ student2 = Student.new(surname:"Sidorov", name:"Dmitry", patronymic:"Egorovich",
 student3 = Student.new(surname:"Petrov", name:"Andrey", patronymic:"Dmitrievich", id:3, phone:"82345678901", telegram:"@andy_panda", email:"andr123@gmail.com")
 
 
-puts student2.to_s
-student2.set_contacts({email:"sid22@gmail.com", phone:"89181111111"})
-puts student2.to_s
+# puts student2.to_s
+# student2.set_contacts({email:"sid22@gmail.com", phone:"89181111111"})
+# puts student2.to_s
 
-print student3.get_info
+# puts student3.get_info
+
+
+data = "surname_initial=Ivarov I.R., git=https://github.com/ivanov, contact=телефон: +79161234567"
+student_short = StudentShort.from_string(1, data)

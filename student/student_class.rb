@@ -108,6 +108,44 @@ class Student
   end
 
   def get_info
-    "ФИО: #{@surname} #{@name[0]}. #{@patronymic[0]}. \nGit: #{git_link} \nКонтакты - #{get_contact}"
+    "ФИО: #{@surname} #{@name[0]}. #{@patronymic[0]}.; Git: #{git_link}; Контакты - #{get_contact}"
+  end
+end
+
+
+class StudentShort
+  attr_reader :id, :surname_initials, :git, :contact
+
+  def initialize(student)
+    raise "The :id is missing" unless student.id
+    raise "The :surname_initials is missing" unless student.surname_initials
+    raise "The :git is missing" unless student.git
+    raise "The :contact is missing" unless student.has_contact?
+
+    @id = student.id
+    @surname_initials = student.surname_initials
+    @git = student.git
+    @contact = student.get_contact
+  end
+
+  def self.from_string(id, info)
+    student_info = { id: id }
+    info.split(",").each do |field|
+      pair = field.split("=")
+
+      if pair.length != 2
+        raise ArgumentError, "Invalid info"
+      end
+      case pair[0].strip
+      when "surname_initial"
+        student_info[:surname_initial] = pair[1].strip
+      when "git"
+        student_info[:git] = pair[1].strip
+      when "contact"
+        student_info[:contact] = pair[1].strip
+      else
+        raise ArgumentError, "Invalid field"
+      end
+    end
   end
 end
