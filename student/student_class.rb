@@ -4,14 +4,16 @@ class Student
   attr_reader :phone, :telegram, :email
 
   def initialize(parameters)
-    @surname = parameters[:surname]
-    @name = parameters[:name]
-    @patronymic = parameters[:patronymic]
+    self.surname = parameters[:surname]
+    self.name = parameters[:name]
+    self.patronymic = parameters[:patronymic]
     @id = parameters[:id]
     self.git = parameters[:git]
     set_contacts(parameters)
-
-    raise "Surname, name and patronymic cannot be empty" if @surname.nil? || @name.nil? || @patronymic.nil?
+    
+    raise "Surname cannot be empty" if !self.class.fio_valid?(@surname)
+    raise "Name cannot be empty" if !self.class.fio_valid?(@name)
+    raise "Patronymic cannot be empty" if !self.class.fio_valid?(@patronymic)
   end
 
   def self.phone_number?(phone)
@@ -28,6 +30,10 @@ class Student
 
   def self.git_valid?(git)
     git.nil? || git.match?(/\A(https:\/\/)?github.com\/[a-zA-Z0-9_-]+\z/)
+  end
+
+  def self.fio_valid?(fio)
+    !fio.nil? && fio.match?(/^[A-Z][a-z]+\z/)
   end
 
   private 
@@ -47,6 +53,18 @@ class Student
     @email=email
   end
 
+  def surname=(surname)
+    @surname=surname if Student.fio_valid?(surname)
+  end
+
+  def name=(name)
+    @name=name if Student.fio_valid?(name)
+  end
+
+  def patronymic=(patronymic)
+    @patronymic=patronymic if Student.fio_valid?(patronymic)
+  end
+
   public
   
   def git=(git)
@@ -64,12 +82,8 @@ class Student
     (!@email.nil? && Student.email_valid?(@email))
   end
 
-  def validate
-    if has_git? && has_contact?
-      puts"У студента есть git и другой контакт"
-    else
-      puts "Ошибка: требуется наличие git и как минимум еще один контакт"
-    end
+  def validate?
+    has_git? && has_contact?
   end
 
   def set_contacts(contacts)
@@ -81,5 +95,19 @@ class Student
   def to_s
     "ID: #{@id}\nФИО: #{@surname} #{@name} #{@patronymic}\nТелефон: #{@phone}\nTelegram: #{@telegram}\nEmail: #{@email}\nGit: #{@git}\n" \
     "#{'-' * 40}"
+  end
+  
+  def get_contact
+    return "телефон: #{@phone}" if @phone
+    return "телеграм: #{@telegram}" if @telegram
+    return "почта: #{@email}" if @email
+  end
+   
+  def git_link
+    @git || "No git"
+  end
+
+  def get_info
+    "ФИО: #{@surname} #{@name[0]}. #{@patronymic[0]}. \nGit: #{git_link} \nКонтакты - #{get_contact}"
   end
 end

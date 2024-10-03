@@ -8,3 +8,5 @@ student3 = Student.new(surname:"Petrov", name:"Andrey", patronymic:"Dmitrievich"
 puts student2.to_s
 student2.set_contacts({email:"sid22@gmail.com", phone:"89181111111"})
 puts student2.to_s
+
+print student3.get_info
