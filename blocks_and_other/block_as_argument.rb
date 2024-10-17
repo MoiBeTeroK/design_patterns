@@ -1,7 +1,9 @@
+# Вариант 5
+
 def read_from_file(file)
   begin
     File.open(file, 'r') do |f|
-      f.flat_map { |line| line.split }
+      f.flat_map { |line| line.split.map{|x| x.to_f } }
     end
   rescue
     puts "Такого адреса файла не существует"
@@ -51,3 +53,13 @@ end
 puts "Исходный массив: #{array}"
 new_array = swap_min_max(array)
 puts "Преобразованный массив: #{new_array}"
+
+# 29 Дан целочисленный массив и интервал a..b. Необходимо проверить наличие максимального элемента массива в этом интервале.
+
+def max_in_range?(array, a, b)
+  max_el= array.max
+  return true if a <= max_el && max_el <= b
+  false
+end
+
+puts max_in_range?(array, 1, 100)
