@@ -37,3 +37,17 @@ end
 
 puts is_global_minimum?(array, 6)
 
+# 17 Дан целочисленный массив. Необходимо поменять местами минимальный и максимальный элементы массива.
+
+def swap_min_max(arr)
+  return arr if arr.empty?
+
+  min_index = arr.index(arr.min)
+  max_index = arr.index(arr.max)
+  arr[min_index], arr[max_index] = arr[max_index], arr[min_index]
+  arr
+end
+
+puts "Исходный массив: #{array}"
+new_array = swap_min_max(array)
+puts "Преобразованный массив: #{new_array}"
