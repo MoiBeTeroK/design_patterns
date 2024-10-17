@@ -74,3 +74,14 @@ def average_absolute(array)
 end
 
 puts average_absolute(array)
+
+# 53 Для введенного списка построить новый с элементами, большими, чем среднее арифметическое списка, но меньшими, чем его максимальное значение.
+
+def modified_list(array)
+  return [] if array.empty?
+  average = array.sum.to_f / array.size
+  max_value = array.max
+  new_array = array.select { |x| x > average && x < max_value }
+end
+
+print modified_list(array)
