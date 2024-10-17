@@ -63,3 +63,14 @@ def max_in_range?(array, a, b)
 end
 
 puts max_in_range?(array, 1, 100)
+
+# 41 Дан целочисленный массив. Найти среднее арифметическое модулей его элементов.
+
+def average_absolute(array)
+  return 0 if array.empty?
+  sum_abs = array.map { |x| x.abs }.sum
+  count = array.size
+  average = sum_abs.to_f / count
+end
+
+puts average_absolute(array)
