@@ -4,14 +4,10 @@ class Student < Person
   attr_reader :phone, :telegram, :email, :surname, :name, :patronymic
 
   def initialize(id:nil, surname:, name:, patronymic:, phone: nil, telegram: nil, email: nil, git: nil)
-    raise ArgumentError, "Invalid surname" if !Student.fio_valid?(surname)
-    raise ArgumentError, "Invalid name" if !Student.fio_valid?(name)
-    raise ArgumentError, "Invalid patronymic" if !Student.fio_valid?(patronymic)
-    
     super(id:id, git:git)
-    @surname = surname
-    @name = name
-    @patronymic = patronymic
+    self.surname = surname
+    self.name = name
+    self.patronymic = patronymic
     set_contacts(phone:phone, telegram:telegram, email:email)
   end
 
@@ -54,14 +50,17 @@ class Student < Person
   end
 
   def surname=(surname)
+    raise "Invalid surname" if surname.nil? || !Student.fio_valid?(surname) 
     @surname = surname if Student.fio_valid?(surname)
   end
 
   def name=(name)
+    raise "Invalid name" if name.nil? || !Student.fio_valid?(name) 
     @name = name if Student.fio_valid?(name)
   end
 
   def patronymic=(patronymic)
+    raise "Invalid patronymic" if patronymic.nil? || !Student.fio_valid?(patronymic) 
     @patronymic = patronymic if Student.fio_valid?(patronymic)
   end
 end

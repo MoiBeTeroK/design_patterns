@@ -19,7 +19,7 @@ class Person
   end
 
   def self.git_valid?(git)
-    !git.nil? && git.match?(/\A(https:\/\/)?github.com\/[a-zA-Z0-9_-]+\z/)
+    git.nil? || git.match?(/\A(https:\/\/)?github.com\/[a-zA-Z0-9_-]+\z/)
   end
 
   def self.fio_valid?(fio)
