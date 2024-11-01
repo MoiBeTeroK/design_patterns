@@ -32,6 +32,31 @@ class Student < Person
     "surname_initials:#{@surname} #{@name[0]}. #{@patronymic[0]}., git:#{@git || "No git"}, contact:#{contact}"
   end
 
+  def surname=(surname)
+    raise "Invalid surname" if surname.nil? || !Student.fio_valid?(surname) 
+    @surname = surname if Student.fio_valid?(surname)
+  end
+
+  def name=(name)
+    raise "Invalid name" if name.nil? || !Student.fio_valid?(name) 
+    @name = name if Student.fio_valid?(name)
+  end
+
+  def patronymic=(patronymic)
+    raise "Invalid patronymic" if patronymic.nil? || !Student.fio_valid?(patronymic) 
+    @patronymic = patronymic if Student.fio_valid?(patronymic)
+  end
+
+  def git=(git)
+    raise "Invalid git" if !Student.git_valid?(git) 
+    @git = git if Student.git_valid?(git) 
+  end
+
+  def id=(id)
+    raise "Invalid id" if !Student.id_valid?(id) 
+    @id = id if Student.id_valid?(id) 
+  end
+
   private 
 
   def phone=(phone)
@@ -48,19 +73,5 @@ class Student < Person
     raise ArgumentError,"Incorrect email" if !Student.email_valid?(email)
     @email = email
   end
-
-  def surname=(surname)
-    raise "Invalid surname" if surname.nil? || !Student.fio_valid?(surname) 
-    @surname = surname if Student.fio_valid?(surname)
-  end
-
-  def name=(name)
-    raise "Invalid name" if name.nil? || !Student.fio_valid?(name) 
-    @name = name if Student.fio_valid?(name)
-  end
-
-  def patronymic=(patronymic)
-    raise "Invalid patronymic" if patronymic.nil? || !Student.fio_valid?(patronymic) 
-    @patronymic = patronymic if Student.fio_valid?(patronymic)
-  end
+  
 end

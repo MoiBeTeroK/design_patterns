@@ -7,19 +7,23 @@ class Person
   end
 
   def self.phone_number?(phone)
-    !phone.nil? && phone.match?(/\A(\+?7|8)\d{10}\z/)
+    phone.nil? || phone.match?(/\A(\+?7|8)\d{10}\z/)
   end
 
   def self.email_valid?(email)
-    !email.nil? && email.match?(/\A[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+\z/)
+    email.nil? || email.match?(/\A[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+\z/)
   end
 
   def self.telegram_valid?(telegram)
-    !telegram.nil? && telegram.match?(/\A@[a-zA-Z0-9_]{5,}\z/)
+    telegram.nil? || telegram.match?(/\A@[a-zA-Z0-9_]{5,}\z/)
   end
 
   def self.git_valid?(git)
     git.nil? || git.match?(/\A(https:\/\/)?github.com\/[a-zA-Z0-9_-]+\z/)
+  end
+
+  def self.id_valid?(id)
+    id.nil? || id.match?(/\A[0-9]+\z/)
   end
 
   def self.fio_valid?(fio)
