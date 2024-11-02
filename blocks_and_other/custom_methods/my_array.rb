@@ -37,7 +37,7 @@ class MyArray
     accumulator = start.nil? ? @array.first : start
 
     @array.each do |element|
-      accumulator = block.call(accumulator, element)
+      accumulator = yield(accumulator, element)
     end
     accumulator
   end
