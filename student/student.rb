@@ -1,13 +1,14 @@
 require './person.rb'
 
 class Student < Person
-  attr_reader :phone, :telegram, :email, :surname, :name, :patronymic
+  attr_reader :phone, :telegram, :email, :surname, :name, :patronymic, :birth_date
 
-  def initialize(id:nil, surname:, name:, patronymic:, phone: nil, telegram: nil, email: nil, git: nil)
+  def initialize(id:nil, surname:, name:, patronymic:, phone: nil, telegram: nil, email: nil, git: nil, birth_date: nil)
     super(id:id, git:git)
     self.surname = surname
     self.name = name
     self.patronymic = patronymic
+    self.birth_date = birth_date
     set_contacts(phone:phone, telegram:telegram, email:email)
   end
 
@@ -18,7 +19,7 @@ class Student < Person
   end
 
   def to_s
-    "ID: #{@id}\nФИО: #{@surname} #{@name} #{@patronymic}\nТелефон: #{@phone}\nTelegram: #{@telegram}\nEmail: #{@email}\nGit: #{@git}\n" \
+    "ID: #{@id}\nФИО: #{@surname} #{@name} #{@patronymic}\nТелефон: #{@phone}\nTelegram: #{@telegram}\nEmail: #{@email}\nGit: #{@git}\nДата рождения: #{@birth_date}\n" \
     "#{'-' * 40}"
   end
 
@@ -55,6 +56,11 @@ class Student < Person
   def id=(id)
     raise "Invalid id" if !Student.id_valid?(id) 
     @id = id if Student.id_valid?(id) 
+  end
+
+  def birth_date=(birth_date)
+    raise "Invalid birth date" unless birth_date.nil? || birth_date.match?(/\A\d{4}-\d{2}-\d{2}\z/)
+    @birth_date = birth_date
   end
 
   private 

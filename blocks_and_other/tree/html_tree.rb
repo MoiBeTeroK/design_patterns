@@ -11,11 +11,11 @@ class HTMLTree
 
   def build_tree(html)
     stack = [@root]
-    html.scan(/<\s*(\/?)(\w+)([^>]*)>/).each do |slash, tag_name, attrs|
+    html.scan(/<(\/?)(\w+)([^>]*)>/).each do |slash, tag_name, attrs|
       attributes = Tag.parsing_attr(attrs)
       if slash.empty?
         tag = Tag.new(name: tag_name, attributes: attributes)
-        stack.last.add_child(tag) unless !stack.last
+        stack.last.add_child(tag) if stack.last
         stack.push(tag)
       elsif stack.last.name == tag_name
         stack.pop

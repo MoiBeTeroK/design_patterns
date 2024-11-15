@@ -5,7 +5,6 @@ def test_cycle
   result = []
   arr.cycle(2) { |x| result << x }
   success = result == [1, 2, 3, 4, 1, 2, 3, 4]
-  puts success ? "Тест cycle завершился успешно." : "Тест cycle провалился."
   success
 end
 
@@ -14,7 +13,6 @@ def test_each_slice
   result = []
   arr.each_slice(3) { |slice| result << slice.to_a }
   success = result == [[1, 2, 3], [4]]
-  puts success ? "Тест each_slice завершился успешно." : "Тест each_slice провалился."
   success
 end
 
@@ -22,7 +20,6 @@ def test_inject
   arr = MyArray.new([1, 2, 3, 4])
   result = arr.inject(0) { |acc, num| acc + num }
   success = result == 10
-  puts success ? "Тест inject завершился успешно." : "Тест inject провалился."
   success
 end
 
@@ -30,7 +27,6 @@ def test_max_by
   arr = MyArray.new(["apple", "banana", "strawberry", "date"])
   result = arr.max_by { |word| word.length }
   success = result == "strawberry"
-  puts success ? "Тест max_by завершился успешно." : "Тест max_by провалился."
   success
 end
 
@@ -38,7 +34,6 @@ def test_reject
   arr = MyArray.new([1, 4, 8, 7, 5, 3])
   result = arr.reject { |x| x.even? }
   success = result == [1, 7, 5, 3]
-  puts success ? "Тест reject завершился успешно." : "Тест reject провалился."
   success
 end
 
@@ -46,7 +41,6 @@ def test_sort_by
   arr = MyArray.new(["apple", "banana", "strawberry", "date"])
   result = arr.sort_by { |word| word.length }
   success = result == ["date", "apple", "banana", "strawberry"]
-  puts success ? "Тест sort_by завершился успешно." : "Тест sort_by провалился."
   success
 end
 

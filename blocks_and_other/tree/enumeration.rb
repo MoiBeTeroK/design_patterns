@@ -13,8 +13,6 @@ class TreeIterator
 
   protected
 
-  attr_writer :root
-
   def enumerator
     raise NotImplementedError, 'Must implement enumerator in subclasses'
   end
@@ -23,7 +21,7 @@ end
 class DFS < TreeIterator
   def enumerator
     Enumerator.new do |yielder|
-      stack = [root]
+      stack = [@root]
       until stack.empty?
         current = stack.pop
         yielder << current unless current.name == "root"
@@ -36,7 +34,7 @@ end
 class BFS < TreeIterator
   def enumerator
     Enumerator.new do |yielder|
-      queue = [root]
+      queue = [@root]
       until queue.empty?
         current = queue.shift
         yielder << current unless current.name == "root"

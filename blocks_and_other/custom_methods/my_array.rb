@@ -26,7 +26,7 @@ class MyArray
     @array.each_with_index do |element, index|
       if index % n == 0
         slice = @array[index, n]
-        yield MyArray.new(slice) unless slice.empty?
+        yield slice unless slice.empty?
       end
     end
   end
