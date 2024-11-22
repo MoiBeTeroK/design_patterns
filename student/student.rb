@@ -1,6 +1,7 @@
 require './person.rb'
 
 class Student < Person
+  include Comparable
   attr_reader :phone, :telegram, :email, :surname, :name, :patronymic, :birth_date
 
   def initialize(id:nil, surname:, name:, patronymic:, phone: nil, telegram: nil, email: nil, git: nil, birth_date: nil)
@@ -27,6 +28,15 @@ class Student < Person
     return @phone if @phone
     return @telegram if @telegram
     return @email if @email
+  end
+
+  def <=>(other)
+    # return 0 if birth_date.nil? || other.birth_date.nil?
+    return 0 if birth_date.nil? && other.birth_date.nil?
+    return -1 if birth_date.nil?
+    return 1 if other.birth_date.nil?
+
+    birth_date <=> other.birth_date
   end
 
   def get_info

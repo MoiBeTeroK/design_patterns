@@ -16,9 +16,9 @@ student3 = Student.new(surname:"Petrov", name:"Andrey", patronymic:"Dmitrievich"
 
 # student_short4 = StudentShort.from_student_object(student2)
 
-tree = StudentTree.new
-tree.add(student1)
+tree = StudentTree.new(student1)
 tree.add(student2)
 tree.add(student3)
+tree.add(student4)
 
 tree.each { |student| puts student.to_s }
