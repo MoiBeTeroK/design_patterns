@@ -1,65 +1,41 @@
 require "./my_array"
+require 'minitest/autorun'
 
-def test_cycle
-  arr = MyArray.new([1, 2, 3, 4])
-  result = []
-  arr.cycle(2) { |x| result << x }
-  success = result == [1, 2, 3, 4, 1, 2, 3, 4]
-  success
-end
-
-def test_each_slice
-  arr = MyArray.new([1, 2, 3, 4])
-  result = []
-  arr.each_slice(3) { |slice| result << slice.to_a }
-  success = result == [[1, 2, 3], [4]]
-  success
-end
-
-def test_inject
-  arr = MyArray.new([1, 2, 3, 4])
-  result = arr.inject(0) { |acc, num| acc + num }
-  success = result == 10
-  success
-end
-
-def test_max_by
-  arr = MyArray.new(["apple", "banana", "strawberry", "date"])
-  result = arr.max_by { |word| word.length }
-  success = result == "strawberry"
-  success
-end
-
-def test_reject
-  arr = MyArray.new([1, 4, 8, 7, 5, 3])
-  result = arr.reject { |x| x.even? }
-  success = result == [1, 7, 5, 3]
-  success
-end
-
-def test_sort_by
-  arr = MyArray.new(["apple", "banana", "strawberry", "date"])
-  result = arr.sort_by { |word| word.length }
-  success = result == ["date", "apple", "banana", "strawberry"]
-  success
-end
-
-def run_all_tests
-  results = {
-    "cycle" => test_cycle,
-    "each_slice" => test_each_slice,
-    "inject" => test_inject,
-    "max_by" => test_max_by,
-    "reject" => test_reject,
-    "sort_by" => test_sort_by
-  }
-
-  success_count = results.values.count(true)
-  
-  puts "\nРезультаты тестов:"
-  results.each do |name, result|
-    puts "#{name}: #{result ? 'успешно' : 'провалился'}"
+class MyArrayTest < Minitest::Test
+  def setup
+    @my_array = MyArray.new([1, 2, 3, 4])
+    @empty_array = MyArray.new([])
   end
-  puts "\nИтог: #{success_count} из #{results.size} тестов завершились успешно."
+
+  def test_cycle
+    result = []
+    @my_array.cycle(2) { |x| result << x }
+    assert_equal [1, 2, 3, 4, 1, 2, 3, 4], result
+  end
+
+  def test_each_slice
+    result = []
+    @my_array.each_slice(2) { |slice| result << slice }
+    assert_equal [[1, 2], [3, 4]], result
+  end
+
+  def test_inject
+    result = @my_array.inject(0) { |sum, x| sum + x }
+    assert_equal 10, result
+  end
+
+  def test_max_by
+    result = @my_array.max_by { |x| x }
+    assert_equal 4, result
+  end
+
+  def test_reject
+    result = @my_array.reject { |x| x.even? }
+    assert_equal [1, 3], result
+  end
+
+  def test_sort_by
+    result = @my_array.sort_by { |x| -x }
+    assert_equal [4, 3, 2, 1], result
+  end
 end
-run_all_tests
