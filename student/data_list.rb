@@ -1,6 +1,6 @@
 class DataList
   def initialize(data)
-    @data = data.sort.freeze
+    @data = data.freeze
     @selected = []
   end
 
@@ -20,7 +20,7 @@ class DataList
     raise ArgumentError, "The method get_data is not implemented"
   end
 
-  private
+  protected
 
   attr_reader :data
   attr_accessor :selected
