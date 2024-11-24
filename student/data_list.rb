@@ -1,11 +1,29 @@
 class DataList
   def initialize(data)
     @data = data.sort.freeze
+    @selected = []
+  end
+
+  def select(number)
+    @selected << number unless @selected.include?(number)
+  end
+
+  def get_selected
+    @selected.dup
+  end
+
+  def get_names
+    raise ArgumentError, "The method get_names is not implemented"
+  end
+
+  def get_data
+    raise ArgumentError, "The method get_data is not implemented"
   end
 
   private
-  
+
   attr_reader :data
+  attr_accessor :selected
 
   def data=(data)
     @data = data.map { |row| deep_copy(row) }
@@ -22,5 +40,4 @@ class DataList
       obj
     end
   end
-
 end
