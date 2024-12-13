@@ -1,4 +1,4 @@
-require './person.rb'
+require './entities/person.rb'
 
 class Student < Person
   include Comparable
@@ -22,6 +22,10 @@ class Student < Person
   def to_s
     "ID: #{@id}\nФИО: #{@surname} #{@name} #{@patronymic}\nТелефон: #{@phone}\nTelegram: #{@telegram}\nEmail: #{@email}\nGit: #{@git}\nДата рождения: #{@birth_date}\n" \
     "#{'-' * 40}"
+  end
+
+  def to_h
+    { id: @id, surname: @surname, name: @name, patronymic: @patronymic, phone: @phone, telegram: @telegram, email: @email,  git: @git, birth_date: @birth_date}
   end
 
   def contact
@@ -64,7 +68,6 @@ class Student < Person
   end
 
   def birth_date=(birth_date)
-    raise "Invalid birth date" unless birth_date.nil? || birth_date.match?(/\A\d{4}-\d{2}-\d{2}\z/)
     @birth_date = birth_date
   end
 

@@ -23,7 +23,7 @@ class Person
   end
 
   def self.id_valid?(id)
-    id.nil? || id.match?(/\A[0-9]+\z/)
+    id.nil? || id.to_s.match?(/\A[0-9]+\z/)
   end
 
   def self.fio_valid?(fio)
