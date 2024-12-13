@@ -1,4 +1,5 @@
 require './deep_dup.rb'
+require './data_table.rb'
 
 class DataList
   include Deep_dup
