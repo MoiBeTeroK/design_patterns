@@ -1,23 +1,35 @@
+require './deep_dup.rb'
+
 class DataList
+  include Deep_dup
+
   def initialize(data)
     @data = data.freeze
     @selected = []
   end
 
   def select(number)
-    @selected << number unless @selected.include?(number)
+    element = data[number]
+    @selected << element unless @selected.include?(element)
   end
 
   def get_selected
-    @selected.dup
+    deep_copy(@selected)
   end
 
   def get_names
     raise ArgumentError, "The method get_names is not implemented"
   end
 
+  def data_row(index)
+    raise ArgumentError, "The method data_row is not implemented"
+  end
+
   def get_data
-    raise ArgumentError, "The method get_data is not implemented"
+    data_for_table = @data.map.with_index do |student, index|
+      self.data_row(index)
+    end
+    DataTable.new(data_for_table)
   end
 
   protected
@@ -27,17 +39,5 @@ class DataList
 
   def data=(data)
     @data = data.map { |row| deep_copy(row) }
-  end
-
-  def deep_copy(obj)
-    if obj.is_a?(Array)
-      obj.map { |item| deep_copy(item) }
-    elsif obj.is_a?(Hash)
-      obj.transform_values { |value| deep_dup(value) }
-    elsif obj.respond_to?(:dup)
-      obj.dup
-    else
-      obj
-    end
   end
 end

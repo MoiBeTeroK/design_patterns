@@ -1,4 +1,4 @@
-require './person.rb'
+require './entities/person.rb'
 
 class StudentShort < Person
   attr_reader :surname_initials, :contact
@@ -34,5 +34,9 @@ class StudentShort < Person
       end
     end
     new(id:id, surname_initials:surname_initials, contact:contact, git: git)
+  end
+
+  def to_s
+    "ID: #{@id}\nФИО: #{@surname_initials}\nКонтакт: #{@contact}\nGit: #{@git}\n#{'-' * 40}"
   end
 end

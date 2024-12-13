@@ -1,16 +1,16 @@
 require './data_list.rb'
 require './data_table.rb'
-require './student_short.rb'
 
 class DataListStudentShort < DataList
-  def get_names
-    ["surname_initials", "contact", "git"]
+  def initialize(data)
+    super(data)
   end
 
-  def get_data
-    data_for_table = @data.map.with_index do |student, index|
-      [index + 1, student.surname_initials, student.contact, student.git]
-    end
-    DataTable.new(data_for_table)
+  def get_names
+    ["№", "surname_initials", "contact", "git"]
+  end
+
+  def data_row(index)
+    [index + 1, @data[index].surname_initials, @data[index].contact, @data[index].git]
   end
 end

@@ -82,3 +82,8 @@ tree.dfs_iterator.each { |tag| puts tag.opening_tag }
 
 puts "\nОбход в ширину:"
 tree.bfs_iterator.each { |tag| puts tag.opening_tag }
+
+
+
+tags = tree.bfs_iterator.select { |tag| tag.has_attributes? }
+tags.map { |tag| puts tag.attributes }

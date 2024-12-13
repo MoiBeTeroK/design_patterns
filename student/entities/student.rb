@@ -31,11 +31,6 @@ class Student < Person
   end
 
   def <=>(other)
-    # return 0 if birth_date.nil? || other.birth_date.nil?
-    return 0 if birth_date.nil? && other.birth_date.nil?
-    return -1 if birth_date.nil?
-    return 1 if other.birth_date.nil?
-
     birth_date <=> other.birth_date
   end
 
