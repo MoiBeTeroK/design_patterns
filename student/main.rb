@@ -1,8 +1,9 @@
 require './entities/student_short.rb'
-require './student_list_JSON.rb'
-require './student_list_YAML.rb'
+require './storage_strategy_JSON.rb'
+require './storage_strategy_YAML.rb'
+require './student_list_base.rb'
 require './data_list.rb'
-require './data_list_studet_short.rb'
+require './data_list_student_short.rb'
 
 # test = DataListStudentShort.new([
 #   StudentShort.new(id:1, surname_initials:"Ivanov I. I.", contact:"ivanov227@gmail.com",  git:"github.com/ivanov"),
@@ -19,6 +20,7 @@ students = [
   Student.new(surname:"Ivanov", name:"Ivan", patronymic:"Ivanovich", id:1, phone:"80123456789", telegram:"@ivan1337", email:"ivanov@gmail.com", git:"github.com/ivanov", birth_date: 20070115),
   Student.new(surname:"Sidorov", name:"Dmitry", patronymic:"Egorovich", id:2, phone:"82398348901", git:"github.com/robbot22", birth_date: 20030521)
 ]
-json = StudentsListYAML.new('./students.yaml')
+
+json = StudentsListBase.new('./students.json', StorageStrategyJSON.new())
 students.each { |student| json.add_student(student) }
 json.write_to_file

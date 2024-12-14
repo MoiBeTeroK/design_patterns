@@ -2,8 +2,9 @@ require './entities/student_short.rb'
 require './data_list_student_short.rb'
 
 class StudentsListBase
-  def initialize(file_path)
+  def initialize(file_path, strategy)
     @file_path = file_path
+    @strategy = strategy
     @students = read_from_file
   end
 
@@ -51,13 +52,13 @@ class StudentsListBase
   end
 
   def write_to_file
-    raise NotImplementedError, 'write_to_file must be implemented in subclass'
+    @strategy.write_to_file(@file_path, @students)
   end
 
   def read_from_file
-    raise NotImplementedError, 'read_from_file must be implemented in subclass'
+    @strategy.read_from_file(@file_path)
   end
 
-  protected
-  attr_accessor :file_path, :students
+  private
+  attr_accessor :file_path, :students, :strategy
 end
