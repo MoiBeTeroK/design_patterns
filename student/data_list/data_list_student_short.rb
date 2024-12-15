@@ -1,5 +1,5 @@
-require './data_list.rb'
-require './data_table.rb'
+require './data_list/data_list.rb'
+require './data_table/data_table.rb'
 
 class DataListStudentShort < DataList
   def initialize(data)

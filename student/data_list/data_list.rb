@@ -1,5 +1,5 @@
-require './deep_copy.rb'
-require './data_table.rb'
+require './deep_copy/deep_copy.rb'
+require './data_table/data_table.rb'
 
 class DataList
   include Deep_dup

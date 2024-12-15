@@ -1,4 +1,4 @@
-require './deep_copy.rb'
+require './deep_copy/deep_copy.rb'
 
 class DataTable
   include Deep_dup

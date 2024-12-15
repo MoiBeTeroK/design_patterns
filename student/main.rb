@@ -1,9 +1,9 @@
 require './entities/student_short.rb'
-require './storage_strategy_JSON.rb'
-require './storage_strategy_YAML.rb'
+require './strategy/storage_strategy_JSON.rb'
+require './strategy/storage_strategy_YAML.rb'
 require './student_list_base.rb'
-require './data_list.rb'
-require './data_list_student_short.rb'
+require './data_list/data_list.rb'
+require './data_list/data_list_student_short.rb'
 
 # test = DataListStudentShort.new([
 #   StudentShort.new(id:1, surname_initials:"Ivanov I. I.", contact:"ivanov227@gmail.com",  git:"github.com/ivanov"),
