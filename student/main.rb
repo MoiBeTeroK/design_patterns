@@ -27,3 +27,4 @@ require './db/postgree.rb'
 # json.write_to_file
 
 client = PG_client.new
+client.exec("select * from students;").each { |row| puts row }
