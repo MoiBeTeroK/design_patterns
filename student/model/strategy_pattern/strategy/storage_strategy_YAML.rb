@@ -1,5 +1,5 @@
 require 'yaml'
-require './strategy/strategy.rb'
+require './model/strategy_pattern/strategy/strategy.rb'
 require './entities/student.rb'
 
 class StorageStrategyYAML < Strategy

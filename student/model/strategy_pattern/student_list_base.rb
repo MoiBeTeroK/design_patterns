@@ -1,5 +1,5 @@
 require './entities/student_short.rb'
-require './data_list/data_list_student_short.rb'
+require './model/data_list/data_list_student_short.rb'
 
 class StudentsListBase
   def initialize(file_path, strategy)
