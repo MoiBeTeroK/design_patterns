@@ -28,6 +28,10 @@ class Student < Person
     { id: @id, surname: @surname, name: @name, patronymic: @patronymic, phone: @phone, telegram: @telegram, email: @email,  git: @git, birth_date: @birth_date}
   end
 
+  def self.from_hash(hash)
+    new(hash.transform_keys { |key| key.to_sym })
+  end
+
   def contact
     return @phone if @phone
     return @telegram if @telegram

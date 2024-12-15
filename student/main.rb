@@ -5,6 +5,7 @@ require './student_list_base.rb'
 require './data_list/data_list.rb'
 require './data_list/data_list_student_short.rb'
 require './db/postgree.rb'
+require './db/student_list_DB.rb'
 
 # test = DataListStudentShort.new([
 #   StudentShort.new(id:1, surname_initials:"Ivanov I. I.", contact:"ivanov227@gmail.com",  git:"github.com/ivanov"),
@@ -26,5 +27,9 @@ require './db/postgree.rb'
 # students.each { |student| json.add_student(student) }
 # json.write_to_file
 
-client = PG_client.new
-client.exec("select * from students;").each { |row| puts row }
+# client = PG_client.new
+# client.exec("select * from students;").each { |row| puts row }
+
+db = StudentListDB.new
+db.client.exec("select * from students;").each { |row| puts row }
+puts db.get_student_short_count
