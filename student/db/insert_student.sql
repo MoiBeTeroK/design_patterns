@@ -1,4 +1,4 @@
-INSERT INTO student (surname, name, patronymic, phone_number, telegram, email, git, birth_date)
+INSERT INTO students (surname, name, patronymic, phone, telegram, email, git, birth_date)
 VALUES 
 ('Иванов', 'Иван', 'Иванович', '80123456789', '@ivanj', 'ewsjvf23@gmail.com',  'github.com/wsed4', '2000-10-08'),
 ('Сидоров', 'Антон', 'Васильевич', NULL, '@looub', NULL,'github.com/wsed4', '2002-09-14'),

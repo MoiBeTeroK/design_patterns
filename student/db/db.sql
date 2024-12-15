@@ -1,14 +1,11 @@
-CREATE DATABASE student;
-USE student;
-CREATE TABLE student (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY,
-    surname TEXT NOT NULL,
-    name TEXT NOT NULL,
-    patronymic TEXT NOT NULL,
-    phone TEXT,
-    telegram TEXT,
-    email TEXT,
-    git TEXT,
-    birth_date DATE NOT NULL
+CREATE TABLE students (
+    id SERIAL PRIMARY KEY,           
+    surname VARCHAR(100) NOT NULL,   
+    name VARCHAR(100) NOT NULL,      
+    patronymic VARCHAR(100) NOT NULL,    
+    phone VARCHAR(15),      
+    telegram VARCHAR(50),            
+    email VARCHAR(255),              
+    git VARCHAR(255),
+    birth_date DATE                  
 );
-ALTER TABLE student AUTO_INCREMENT = 1;
