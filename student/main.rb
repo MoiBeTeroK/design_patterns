@@ -27,9 +27,13 @@ require './model/db/student_list_DB.rb'
 # students.each { |student| json.add_student(student) }
 # json.write_to_file
 
-# client = PG_client.new
+# client = PGClient.new
 # client.exec("select * from students;").each { |row| puts row }
 
 db = StudentListDB.new
 db.client.exec("select * from students;").each { |row| puts row }
 puts db.get_student_short_count
+
+pg1 = PGClient.instance
+pg2 = PGClient.instance
+puts pg1.object_id == pg2.object_id

@@ -29,6 +29,7 @@ class StudentsListBase
   end
 
   def add_student(student)
+    check_unique_student(student)
     student_ids = @students.map { |student| student.id }
     max_id = student_ids.max || 0
     student.id = max_id + 1
@@ -36,6 +37,7 @@ class StudentsListBase
   end
 
   def replace_student(id, new_student)
+    check_unique_student(new_student, id)
     index = @students.find_index { |student| student.id == id }
     raise IndexError, "No student with id #{id}" unless index
 
@@ -61,4 +63,9 @@ class StudentsListBase
 
   private
   attr_accessor :file_path, :students, :strategy
+
+  def check_unique_student(student, id = nil)
+    duplicate = @students.find { |s| s.id != id && [s.phone, s.email, s.git].any? { |field| [student.phone, student.email, student.git].include?(field) } }
+    raise "Student with the same phone, email, or git already exists!" if duplicate
+  end
 end
