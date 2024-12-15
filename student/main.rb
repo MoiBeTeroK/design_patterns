@@ -36,4 +36,4 @@ puts db.get_student_short_count
 
 pg1 = PGClient.instance
 pg2 = PGClient.instance
-puts pg1.object_id == pg2.object_id
+puts pg1.object_id.equal?(pg2.object_id)

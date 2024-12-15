@@ -14,11 +14,7 @@ class PGClient
   end
   
   def self.instance
-    if @instance.nil?
       @instance ||= new
-    else 
-      @instance
-    end
   end
 
   private
