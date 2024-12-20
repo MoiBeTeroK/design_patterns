@@ -20,10 +20,11 @@ require './model/db/student_list_DB.rb'
 
 # students = [
 #   Student.new(surname:"Ivanov", name:"Ivan", patronymic:"Ivanovich", id:1, phone:"80123456789", telegram:"@ivan1337", email:"ivanov@gmail.com", git:"github.com/ivanov", birth_date: 20070115),
-#   Student.new(surname:"Sidorov", name:"Dmitry", patronymic:"Egorovich", id:2, phone:"82398348901", git:"github.com/robbot22", birth_date: 20030521)
+#   Student.new(surname:"Sidorov", name:"Dmitry", patronymic:"Egorovich", id:2, phone:"82398348901", git:"github.com/robbot22", birth_date: 20030521),
+#   Student.new(surname:"Sidorov", name:"Dmitry", patronymic:"Egorovich", id:3, phone:"82398318901", git:"github.com/robbbot22", birth_date: 20030521)
 # ]
 
-# json = StudentsListBase.new('./data/students.json', StorageStrategyJSON.new())
+# json = StudentsListBase.new('./resources/data/students1.json', StorageStrategyJSON.new())
 # students.each { |student| json.add_student(student) }
 # json.write_to_file
 

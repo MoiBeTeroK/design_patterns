@@ -1,5 +1,6 @@
 require './entities/student_short.rb'
 require './model/data_list/data_list_student_short.rb'
+require './tree/student_tree.rb'
 
 class StudentsListBase
   def initialize(file_path, strategy)
@@ -29,7 +30,7 @@ class StudentsListBase
   end
 
   def add_student(student)
-    check_unique_student(student)
+    raise "Student is not unique!" unless unique_student?(student)
     student_ids = @students.map { |student| student.id }
     max_id = student_ids.max || 0
     student.id = max_id + 1
@@ -37,10 +38,10 @@ class StudentsListBase
   end
 
   def replace_student(id, new_student)
-    check_unique_student(new_student, id)
     index = @students.find_index { |student| student.id == id }
     raise IndexError, "No student with id #{id}" unless index
 
+    raise "Student is not unique!" unless unique_student?(new_student)
     @students[index] = new_student
     new_student.id = id
   end
@@ -64,8 +65,31 @@ class StudentsListBase
   private
   attr_accessor :file_path, :students, :strategy
 
-  def check_unique_student(student, id = nil)
-    duplicate = @students.find { |s| s.id != id && [s.phone, s.email, s.git].any? { |field| [student.phone, student.email, student.git].include?(field) } }
-    raise "Student with the same phone, email, or git already exists!" if duplicate
+  def unique_student?(student)
+    unique_git?(student.git) && unique_phone?(student.phone) && unique_email?(student.email) && unique_telegram?(student.telegram)
+  end
+
+  def unique_git?(git)
+    unique_attr?(:git, git)
+  end
+
+  def unique_phone?(phone)
+    unique_attr?(:phone, phone)
+  end
+
+  def unique_email?(email)
+    unique_attr?(:email, email)
+  end
+
+  def unique_telegram?(telegram)
+    unique_attr?(:telegram, telegram)
+  end
+
+  def unique_attr?(symbol, value)
+    tree = StudentTree.new
+    @students.each do |student|
+      tree.add(student.send(symbol)) if student.send(symbol)
+    end
+    !tree.any? { |existing_value| existing_value == value }
   end
 end
