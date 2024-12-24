@@ -87,8 +87,17 @@ class StudentListView < FXMainWindow
       @table = FXTable.new(parent, opts: LAYOUT_FILL_X | LAYOUT_FILL_Y | TABLE_READONLY | TABLE_COL_SIZABLE)
       @table.setTableSize(@items_per_page, 3)
       @table.defColumnWidth = 180
-      @table.rowHeaderWidth = 30
-      @table.columnHeader.connect(SEL_COMMAND) { |_, _, col| sort_table_by_column}
+      @table.rowHeaderWidth = 0
+      @table.columnHeaderHeight = 0
+      @table.connect(SEL_COMMAND) do |_, _, pos|
+        if pos.row == 0
+            sort_table_by_column
+        end
+        if pos.col == 0
+            @table.selectRow(pos.row)
+        end
+        update_buttons_state
+      end
 
       nav_frame = FXHorizontalFrame.new(parent, opts: LAYOUT_FILL_X)
       @prev_button = FXButton.new(nav_frame, "<", opts: BUTTON_NORMAL | LAYOUT_LEFT)
@@ -103,10 +112,28 @@ class StudentListView < FXMainWindow
     FXLabel.new(parent, "ОБЛАСТЬ УПРАВЛЕНИЯ", opts: LAYOUT_FILL_X)
     control_frame = FXVerticalFrame.new(parent, opts: LAYOUT_FILL_X)
 
-    ["Добавить", "Удалить", "Изменить", "Обновить"].each do |label|
-      button_frame = FXHorizontalFrame.new(control_frame, opts: LAYOUT_FILL_X)
-      button = FXButton.new(button_frame, label, opts: BUTTON_NORMAL| LAYOUT_FILL_X)
+    add_button = FXButton.new(parent, "Добавить", opts: BUTTON_NORMAL | LAYOUT_FILL_X)
+    add_button.connect(SEL_COMMAND) { add_entry }
+
+    @delete_button = FXButton.new(parent, "Удалить", opts: BUTTON_NORMAL | LAYOUT_FILL_X)
+    @delete_button.connect(SEL_COMMAND) { delete_entries }
+
+    @edit_button = FXButton.new(parent, "Изменить", opts: BUTTON_NORMAL | LAYOUT_FILL_X)
+    @edit_button.connect(SEL_COMMAND) { edit_entry }
+
+    refresh_button = FXButton.new(parent, "Обновить", opts: BUTTON_NORMAL | LAYOUT_FILL_X)
+    refresh_button.connect(SEL_COMMAND) { update_table }
+
+    @table.connect(SEL_CHANGED) do
+      update_buttons_state
     end
+    update_buttons_state
+  end
+
+  def update_buttons_state
+    selected_rows = (0...self.table.numRows).select { |row| self.table.rowSelected?(row) }
+    self.delete_button.enabled = !selected_rows.empty?
+    self.edit_button.enabled = (selected_rows.size == 1)
   end
 
   def change_page(offset)
@@ -164,7 +191,7 @@ class StudentListView < FXMainWindow
 
   private
   
-  attr_accessor :filters, :students_list, :current_page, :items_per_page, :table, :prev_button, :next_button, :page_label, :sort_order, :data
+  attr_accessor :filters, :students_list, :current_page, :items_per_page, :table, :prev_button, :next_button, :page_label, :sort_order, :data, :selected_rows, :edit_button, :delete_button
 
   def reset_filters
     @filters.each do |label, filter|
@@ -179,5 +206,25 @@ class StudentListView < FXMainWindow
         end
         filter[:text_field].setText("")
     end
+  end
+
+  def add_entry
+    # Какая-то логика
+  end
+
+  def edit_entry
+    @selected_rows = []
+    (0...@table.numRows).each do |row_idx|
+        @selected_rows << row_idx if @table.rowSelected?(row_idx)
+    end
+    puts "Изменение строки с номером: #{@selected_rows.first}"
+  end
+
+  def delete_entries
+    @selected_rows = []
+    (0...@table.numRows).each do |row_idx|
+        @selected_rows << row_idx if @table.rowSelected?(row_idx)
+    end
+    puts "Удаление строк с номерами: #{@selected_rows}"
   end
 end
