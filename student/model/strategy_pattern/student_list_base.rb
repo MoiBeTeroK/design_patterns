@@ -1,6 +1,6 @@
-require './entities/student_short.rb'
-require './model/data_list/data_list_student_short.rb'
-require './tree/student_tree.rb'
+require_relative '../entities/student_short.rb'
+require_relative '../data_list/data_list_student_short.rb'
+require_relative '../tree/student_tree.rb'
 
 class StudentsListBase
   def initialize(file_path, strategy)

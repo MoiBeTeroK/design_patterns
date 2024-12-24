@@ -1,6 +1,6 @@
-require './entities/student.rb'
-require './entities/student_short.rb'
-require './model/data_list/data_list_student_short.rb'
+require_relative '../entities/student.rb'
+require_relative '../entities/student_short.rb'
+require_relative '../data_list/data_list_student_short.rb'
 
 class StudentListDB
   attr_accessor :client 

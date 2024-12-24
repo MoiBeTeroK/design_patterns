@@ -27,7 +27,7 @@ class Person
   end
 
   def self.fio_valid?(fio)
-    !fio.nil? && fio.match?(/^[A-Z][a-z]*\z/)
+    !fio.nil? && fio.match?(/^[A-ZА-ЯЁ][a-zа-яё]*\z/)
   end
 
   def has_contact?
