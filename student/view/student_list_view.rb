@@ -3,6 +3,7 @@ require_relative "../model/db/student_list_DB.rb"
 require_relative "../model/strategy_pattern/student_list_base.rb"
 require_relative "../model/strategy_pattern/strategy/storage_strategy_JSON.rb"
 require_relative "../model/strategy_pattern/strategy/storage_strategy_YAML.rb"
+require_relative '../controller/student_list_controller.rb'
 include Fox
 
 class StudentListView < FXMainWindow
@@ -13,6 +14,7 @@ class StudentListView < FXMainWindow
       @students_list = students_list
       @current_page = 1
       @items_per_page = 11
+      @controller = StudentsListController.new(self, students_list)
 
       main_frame = FXHorizontalFrame.new(self, LAYOUT_FILL_X | LAYOUT_FILL_Y)
 
@@ -91,7 +93,8 @@ class StudentListView < FXMainWindow
       @table.columnHeaderHeight = 0
       @table.connect(SEL_COMMAND) do |_, _, pos|
         if pos.row == 0
-            sort_table_by_column
+          sort_table_by_column(pos.col)
+          update_table
         end
         if pos.col == 0
             @table.selectRow(pos.row)
@@ -124,21 +127,20 @@ class StudentListView < FXMainWindow
     refresh_button = FXButton.new(parent, "Обновить", opts: BUTTON_NORMAL | LAYOUT_FILL_X)
     refresh_button.connect(SEL_COMMAND) { update_table }
 
-    @table.connect(SEL_CHANGED) do
-      update_buttons_state
-    end
+    @table.connect(SEL_CHANGED) { update_buttons_state }
+
     update_buttons_state
   end
 
   def update_buttons_state
-    selected_rows = (0...self.table.numRows).select { |row| self.table.rowSelected?(row) }
-    self.delete_button.enabled = !selected_rows.empty?
-    self.edit_button.enabled = (selected_rows.size == 1)
+    selected_rows = (0...@table.numRows).select { |row| @table.rowSelected?(row) }
+    @delete_button.enabled = !selected_rows.empty?
+    @edit_button.enabled = (selected_rows.size == 1)
   end
 
   def change_page(offset)
     new_page = @current_page + offset
-    total_pages = (@students_list.get_student_short_count.to_f / @items_per_page).ceil
+    total_pages = (@data.row_count.to_f / @items_per_page).ceil
     @current_page = new_page if new_page.between?(1, total_pages)
     update_table
   end
@@ -147,41 +149,38 @@ class StudentListView < FXMainWindow
     return if data.nil? || data.row_count <= 1
     
     total_pages = (data.row_count.to_f / items_per_page).ceil
-    page_label.text = "#{current_page} страница из #{total_pages}"
+    @page_label.text = "#{current_page} страница из #{total_pages}"
     
     start_idx, end_idx = [(current_page - 1) * items_per_page, data.row_count - 1]
     end_idx = [start_idx + items_per_page - 1, end_idx].min
-    
-    data_for_page = (start_idx..end_idx).map { |row_idx| (0...data.column_count).map { |col_idx| data.get_element(row_idx, col_idx) } }
 
-    table.setTableSize(data_for_page.length, data.column_count)
-    table.setColumnWidth(0, 30)
-  
-    data_for_page.each_with_index do |row, row_idx|
-      row.each_with_index { |value, col_idx| table.setItemText(row_idx, col_idx, value.to_s) }
+    headers = (0...data.column_count).map {|col_idx| data.get_element(0, col_idx)}
+    
+    data_for_page = (start_idx+1..end_idx).map { |row_idx| (0...data.column_count).map { |col_idx| data.get_element(row_idx, col_idx) } }
+
+    data_for_page = [headers] + data_for_page
+    # Обновляем таблицу
+    row_count = data_for_page.length
+    column_count = @data.column_count
+
+    @table.setTableSize(row_count, column_count)
+    @table.setColumnWidth(0, 30)
+
+    (0...row_count).each do |row_idx|
+        (0...column_count).each do |col_idx|
+            value = data_for_page[row_idx][col_idx]
+            @table.setItemText(row_idx, col_idx, value.to_s)
+        end
     end
   end
   
   def load_data_students
-      @data = @students_list.get_k_n_student_short_list(1, @students_list.get_student_short_count).get_data
+      @data = @controller.refresh_data
   end
 
   def sort_table_by_column(col_idx=0)
     return if @data.nil? || @data.row_count <= 1
-
-    rows = (1...@data.row_count).map do |row_idx|
-      (0...@data.column_count).map { |col_idx| @data.get_element(row_idx, col_idx) }
-    end
-  
-    @sort_order = !@sort_order
-  
-    sorted_rows = rows.sort_by { |row| row[1]}
-    sorted_rows.reverse! unless @sort_order
-  
-    headers = (0...@data.column_count).map { |col_idx| @data.get_element(0, col_idx) }
-    @data = DataTable.new([headers] + sorted_rows)
-
-    update_table
+    @data, @sort_order = @controller.sort_table_by_column(@data, @sort_order, col_idx)
   end
   
   def create
@@ -191,7 +190,7 @@ class StudentListView < FXMainWindow
 
   private
   
-  attr_accessor :filters, :students_list, :current_page, :items_per_page, :table, :prev_button, :next_button, :page_label, :sort_order, :data, :selected_rows, :edit_button, :delete_button
+  attr_accessor :filters, :students_list, :current_page, :items_per_page, :table, :prev_button, :next_button, :page_label, :sort_order, :data, :selected_rows, :edit_button, :delete_button, :controller
 
   def reset_filters
     @filters.each do |label, filter|
@@ -209,7 +208,7 @@ class StudentListView < FXMainWindow
   end
 
   def add_entry
-    # Какая-то логика
+    @controller.create
   end
 
   def edit_entry
@@ -217,7 +216,7 @@ class StudentListView < FXMainWindow
     (0...@table.numRows).each do |row_idx|
         @selected_rows << row_idx if @table.rowSelected?(row_idx)
     end
-    puts "Изменение строки с номером: #{@selected_rows.first}"
+    @controller.update(@selected_rows.first)
   end
 
   def delete_entries
@@ -225,6 +224,6 @@ class StudentListView < FXMainWindow
     (0...@table.numRows).each do |row_idx|
         @selected_rows << row_idx if @table.rowSelected?(row_idx)
     end
-    puts "Удаление строк с номерами: #{@selected_rows}"
+    @controller.delete(@selected_rows)
   end
 end

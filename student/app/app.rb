@@ -1,5 +1,5 @@
 require 'fox16'
-require "./student_list_view.rb"
+require "../view/student_list_view.rb"
 require "../model/strategy_pattern/student_list_base.rb"
 require "../model/strategy_pattern/strategy/storage_strategy_JSON.rb"
 include Fox
