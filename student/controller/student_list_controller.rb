@@ -4,13 +4,9 @@ require_relative '../model/strategy_pattern/student_list_base.rb'
 class StudentsListController
   def initialize(view)
     @view = view
-    begin
-        @students_list = StudentsListBase.new('../resources/data/students.json', StorageStrategyJSON.new)
-        @data_list = DataListStudentShort.new([])
-        @data_list.add_observer(self.view)
-    rescue StandardError => e
-        @view.show_error_message("Ошибка при доступе к данным: #{e.message}")
-    end
+    @students_list = StudentsListBase.new('../resources/data/students.json', StorageStrategyJSON.new)
+    @data_list = DataListStudentShort.new([])
+    @data_list.add_observer(@view)
   end
 
   def refresh_data

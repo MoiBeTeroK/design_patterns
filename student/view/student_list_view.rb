@@ -1,8 +1,4 @@
 require 'fox16'
-require_relative "../model/db/student_list_DB.rb"
-require_relative "../model/strategy_pattern/student_list_base.rb"
-require_relative "../model/strategy_pattern/strategy/storage_strategy_JSON.rb"
-require_relative "../model/strategy_pattern/strategy/storage_strategy_YAML.rb"
 require_relative '../controller/student_list_controller.rb'
 include Fox
 
