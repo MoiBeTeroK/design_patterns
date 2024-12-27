@@ -8,13 +8,13 @@ include Fox
 
 class StudentListView < FXMainWindow
 
-  def initialize(app, students_list)
+  def initialize(app)
       super(app, "Student List", width: 1000, height: 524)
       @filters = {}
-      @students_list = students_list
       @current_page = 1
       @items_per_page = 11
-      @controller = StudentsListController.new(self, students_list)
+      @total_pages = 0
+      @controller = StudentsListController.new(self)
 
       main_frame = FXHorizontalFrame.new(self, LAYOUT_FILL_X | LAYOUT_FILL_Y)
 
@@ -27,8 +27,7 @@ class StudentListView < FXMainWindow
       control_frame = FXVerticalFrame.new(main_frame, LAYOUT_FIX_WIDTH, width: 180, padding: 10)
       set_сontrol_parameters(control_frame)
 
-      load_data_students
-      update_table
+      refresh_data
   end
 
   def set_filter_parameters(parent)
@@ -87,17 +86,17 @@ class StudentListView < FXMainWindow
     
   def set_table_parameters(parent)
       @table = FXTable.new(parent, opts: LAYOUT_FILL_X | LAYOUT_FILL_Y | TABLE_READONLY | TABLE_COL_SIZABLE)
-      @table.setTableSize(@items_per_page, 3)
-      @table.defColumnWidth = 180
+      @table.setTableSize(@items_per_page, 4)
+      @table.setColumnWidth(0, 30)
+      (1...4).each { |col| @table.setColumnWidth(col, 180) }
       @table.rowHeaderWidth = 0
       @table.columnHeaderHeight = 0
       @table.connect(SEL_COMMAND) do |_, _, pos|
         if pos.row == 0
           sort_table_by_column(pos.col)
-          update_table
         end
         if pos.col == 0
-            @table.selectRow(pos.row)
+          @table.selectRow(pos.row)
         end
         update_buttons_state
       end
@@ -125,7 +124,7 @@ class StudentListView < FXMainWindow
     @edit_button.connect(SEL_COMMAND) { edit_entry }
 
     refresh_button = FXButton.new(parent, "Обновить", opts: BUTTON_NORMAL | LAYOUT_FILL_X)
-    refresh_button.connect(SEL_COMMAND) { update_table }
+    refresh_button.connect(SEL_COMMAND) { refresh_data }
 
     @table.connect(SEL_CHANGED) { update_buttons_state }
 
@@ -140,47 +139,36 @@ class StudentListView < FXMainWindow
 
   def change_page(offset)
     new_page = @current_page + offset
-    total_pages = (@data.row_count.to_f / @items_per_page).ceil
-    @current_page = new_page if new_page.between?(1, total_pages)
-    update_table
+    return if new_page < 1 || new_page > @total_pages
+    @current_page = new_page
+    @controller.refresh_data
   end
 
-  def update_table
-    return if data.nil? || data.row_count <= 1
-    
-    total_pages = (data.row_count.to_f / items_per_page).ceil
-    @page_label.text = "#{current_page} страница из #{total_pages}"
-    
-    start_idx, end_idx = [(current_page - 1) * items_per_page, data.row_count - 1]
-    end_idx = [start_idx + items_per_page - 1, end_idx].min
-
-    headers = (0...data.column_count).map {|col_idx| data.get_element(0, col_idx)}
-    
-    data_for_page = (start_idx+1..end_idx).map { |row_idx| (0...data.column_count).map { |col_idx| data.get_element(row_idx, col_idx) } }
-
-    data_for_page = [headers] + data_for_page
-    # Обновляем таблицу
-    row_count = data_for_page.length
-    column_count = @data.column_count
-
-    @table.setTableSize(row_count, column_count)
-    @table.setColumnWidth(0, 30)
-
-    (0...row_count).each do |row_idx|
-        (0...column_count).each do |col_idx|
-            value = data_for_page[row_idx][col_idx]
-            @table.setItemText(row_idx, col_idx, value.to_s)
+  def set_table_data(input_data_table)
+    clear_table
+    (0...input_data_table.row_count).each do |row|
+        (0...input_data_table.column_count).each do |col|
+            @table.setItemText(row, col, input_data_table.get_element(row, col).to_s)
         end
     end
   end
-  
-  def load_data_students
-      @data = @controller.refresh_data
+
+  def set_table_params(column_names, entries_count)
+    column_names.each_with_index do |name, index|
+        @table.setItemText(0, index, name)
+    end
+    @total_pages = (entries_count / self.items_per_page.to_f).ceil
+    @page_label.text = "Страница #{self.current_page} из #{self.total_pages}"
+  end
+
+  def refresh_data
+    @current_page = 1
+    @controller.refresh_data
   end
 
   def sort_table_by_column(col_idx=0)
-    return if @data.nil? || @data.row_count <= 1
-    @data, @sort_order = @controller.sort_table_by_column(@data, @sort_order, col_idx)
+    # return if @data.nil? || @data.row_count <= 1
+    # @data, @sort_order = @controller.sort_table_by_column(@data, @sort_order, col_idx)
   end
   
   def create
@@ -188,9 +176,11 @@ class StudentListView < FXMainWindow
       show(PLACEMENT_SCREEN)
   end
 
+  attr_accessor :current_page, :items_per_page
+
   private
   
-  attr_accessor :filters, :students_list, :current_page, :items_per_page, :table, :prev_button, :next_button, :page_label, :sort_order, :data, :selected_rows, :edit_button, :delete_button, :controller
+  attr_accessor :filters, :table, :prev_button, :next_button, :page_label, :sort_order, :selected_rows, :edit_button, :delete_button, :controller, :total_pages
 
   def reset_filters
     @filters.each do |label, filter|
@@ -204,6 +194,15 @@ class StudentListView < FXMainWindow
           filter[:text_field].enabled = false
         end
         filter[:text_field].setText("")
+    end
+    refresh_data
+  end
+
+  def clear_table
+    (0...@table.numRows).each do |row|
+        (0...@table.numColumns).each do |col|
+            @table.setItemText(row, col, "")
+        end
     end
   end
 

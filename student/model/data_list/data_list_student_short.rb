@@ -3,7 +3,7 @@ require_relative '../data_table/data_table.rb'
 
 class DataListStudentShort < DataList
   def base_names
-    ["Surname & initials", "Git", "Contacts"]
+    ["Surname and initials", "Git", "Contacts"]
   end
 
   def data_row(item, index)

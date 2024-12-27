@@ -13,16 +13,14 @@ class StudentsListBase
     @students.find { |student| student.id == id }
   end
 
-  def get_k_n_student_short_list(k, n, existing_data_list = nil)
+  def get_k_n_student_short_list(k, n, data_list = nil)
     start_index = (k - 1) * n
     slice = @students[start_index, n] || []
-    student_shorts = slice.map { |student| StudentShort.from_student_object(student) }
-    if existing_data_list
-      existing_data_list.replace(student_shorts)
-      existing_data_list
-    else
-      DataListStudentShort.new(student_shorts)
-    end
+    student_short = slice.map { |student| StudentShort.from_student_object(student) }
+    data_list ||= DataListStudentShort.new(student_short_list)
+    data_list.data = student_short
+
+    data_list
   end
 
   def sort_by_surname_initials!
