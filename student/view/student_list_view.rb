@@ -1,5 +1,6 @@
 require 'fox16'
 require_relative '../controller/student_list_controller.rb'
+require_relative '../model/strategy_pattern/strategy/storage_strategy_JSON.rb'
 include Fox
 
 class StudentListView < FXMainWindow
@@ -153,8 +154,8 @@ class StudentListView < FXMainWindow
     column_names.each_with_index do |name, index|
         @table.setItemText(0, index, name)
     end
-    @total_pages = (entries_count / self.items_per_page.to_f).ceil
-    @page_label.text = "Страница #{self.current_page} из #{self.total_pages}"
+    @total_pages = (entries_count / @items_per_page.to_f).ceil
+    @page_label.text = "Страница #{@current_page} из #{@total_pages}"
   end
 
   def refresh_data

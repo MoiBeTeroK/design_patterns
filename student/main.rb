@@ -1,4 +1,4 @@
-require './entities/student_short.rb'
+require './model/entities/student_short.rb'
 require './model/strategy_pattern/strategy/storage_strategy_JSON.rb'
 require './model/strategy_pattern/strategy/storage_strategy_YAML.rb'
 require './model/strategy_pattern/student_list_base.rb'

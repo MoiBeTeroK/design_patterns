@@ -16,18 +16,7 @@ class StudentsListController
   end
 
   def sort_table_by_column(data, sort_order, col_idx)
-    # headers = (0...data.column_count).map {|col_idx| data.get_element(0, col_idx)}
-    # rows = (1...data.row_count).map do |row_idx|
-    #     (0...data.column_count).map {|column_idx| data.get_element(row_idx, column_idx)}
-    # end
-    # sort_order ||= {}
-    # sort_order[col_idx] = !sort_order.fetch(col_idx, false)
-    # sorted_rows = rows.sort_by do |row| 
-    #     value = row[col_idx]
-    #     value.nil? ? "\xFF" * 1000 : value
-    # end
-    # sorted_rows.reverse! unless sort_order[col_idx]
-    # return DataTable.new([headers] + sorted_rows), sort_order
+    # ..
   end
 
   def create
