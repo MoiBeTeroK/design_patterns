@@ -1,5 +1,4 @@
 require_relative './data_list.rb'
-require_relative '../data_table/data_table.rb'
 
 class DataListMovies < DataList
   def base_names
@@ -7,6 +6,6 @@ class DataListMovies < DataList
   end
 
   def data_row(item, index)
-    [index + 1, item.surname_initials, item.git, item.contact,]
+    [index + 1, item.title, item.duration, item.age_rating, item.release_date,]
   end
 end

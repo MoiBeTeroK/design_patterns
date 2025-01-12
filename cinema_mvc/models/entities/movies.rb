@@ -1,12 +1,16 @@
 class Movies
-  attr_reader :title, :duration, :age_rating, :release_date
+  attr_reader :id, :title, :duration, :age_rating, :release_date
 
   def initialize(id:nil, title:, duration:, age_rating:, release_date:)
-    self.id = id
-    self.title = title
-    self.duration = duration
-    self.age_rating = age_rating
-    self.release_date = release_date
+    @id = id
+    @title = title
+    @duration = duration
+    @age_rating = age_rating
+    @release_date = release_date
+  end
+
+  def self.from_hash(hash)
+    new(**hash.transform_keys { |key| key.to_sym })
   end
 
   private

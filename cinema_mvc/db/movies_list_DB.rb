@@ -11,7 +11,20 @@ class MoviesListDB
   def get_by_id(id)
     result = client.exec_params("SELECT * FROM students WHERE id = $1", [id])
     raise "Student with id=#{id} not found" if result.ntuples.zero?
-    result[0] 
+    Movies.from_hash(result[0])
+  end
+
+  def get_movies(k, n, data_list = nil)
+    start_index = (k - 1) * n
+    query = "SELECT * FROM movies LIMIT #{n} OFFSET #{start_index}"
+    result = client.exec(query)
+    if result.ntuples.zero?
+      raise IndexError, 'Index out of range'
+    end
+    movies = result.map { |row| Movies.from_hash(row) }
+    data_list ||= DataListMovies.new(movies)
+    data_list.data = movies
+    data_list
   end
   
   def add_movie(movie)
